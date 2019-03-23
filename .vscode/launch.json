@@ -1,0 +1,20 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug",
+      "type": "python",
+      "request": "launch",
+      "pythonPath": "${env:OCTOPRINT_ENV}\\Scripts\\python.exe",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}\\src;${env:OCTOPRINT_ENV}\\lib\\site-packages"
+      },
+      "program": "${workspaceFolder}\\src\\octoprint",
+      "args": ["serve", "-b.octoprint"],
+      "console": "integratedTerminal"
+    },
+  ]
+}

@@ -1,5 +1,5 @@
 {
-    "editor.insertSpaces": true,
+    "editor.insertSpaces": false,
     "files.eol": "\n",
   
     "terminal.integrated.shellArgs.windows": [
