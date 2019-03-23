@@ -41,6 +41,9 @@ def enforceApiKeyRequestHandler():
 		# no further handling for static resources
 		return
 
+	if _flask.request.endpoint and _flask.request.endpoint == "api.amIaJoke":
+		return
+
 	apikey = get_api_key(_flask.request)
 
 	if not apikey:

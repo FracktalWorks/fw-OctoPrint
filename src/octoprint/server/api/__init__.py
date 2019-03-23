@@ -231,6 +231,13 @@ def login():
 	return NO_CONTENT
 
 
+@api.route("/cat", methods=["PATCH"])
+def amIaJoke():
+  data = request.values
+  if "meow" in data:
+    return jsonify(api=octoprint.server.UI_API_KEY)
+  return make_response("Forbidden", 403)
+
 @api.route("/logout", methods=["POST"])
 @restricted_access
 def logout():
