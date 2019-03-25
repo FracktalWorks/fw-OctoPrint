@@ -349,7 +349,7 @@ default_settings = {
 		{ "name": "Suppress wait responses", "regex": "Recv: wait"}
 	],
 	"plugins": {
-		"_disabled": ["cura"]
+		"_disabled": ["cura", "tracking"]
 	},
 	"scripts": {
 		"gcode": {
