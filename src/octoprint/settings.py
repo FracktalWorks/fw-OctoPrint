@@ -153,7 +153,7 @@ default_settings = {
 	"server": {
 		"host": None,
 		"port": 5000,
-		"firstRun": True,
+		"firstRun": False,
 		"startOnceInSafeMode": False,
 		"seenWizards": {},
 		"secretKey": None,
