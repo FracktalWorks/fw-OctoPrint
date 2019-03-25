@@ -233,10 +233,12 @@ def login():
 
 @api.route("/cat", methods=["PATCH"])
 def amIaJoke():
-  data = request.values
-  if "meow" in data:
-    return jsonify(api=octoprint.server.UI_API_KEY)
-  return make_response("Forbidden", 403)
+	data = request.values
+	if "meow" in data:
+		return jsonify(dynamic=octoprint.server.UI_API_KEY,
+									 static=s().get(["api", "key"]),
+									 api_enabled=s().getBoolean(["api", "enabled"]))
+	return make_response("Forbidden", 403)
 
 @api.route("/logout", methods=["POST"])
 @restricted_access
