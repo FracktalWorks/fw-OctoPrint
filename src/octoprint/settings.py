@@ -189,7 +189,7 @@ default_settings = {
 			"port": 53
 		},
 		"pluginBlacklist": {
-			"enabled": None,
+			"enabled": True,
 			"url": "https://plugins.octoprint.org/blacklist.json",
 			"ttl": 15 * 60 # 15 min
 		},
