@@ -153,11 +153,11 @@ def get_cmdclass():
 
 
 def params():
-	name = "OctoPrint"
+	name = "fw-OctoPrint"
 	version = versioneer.get_version()
 	cmdclass = get_cmdclass()
 
-	description = "The snappy web interface for your 3D printer"
+	description = "Web interface for Fracktal Works 3D printers"
 	long_description = read_file_contents(os.path.join(here, "README.md"))
 	long_description_content_type = "text/markdown"
 
@@ -188,16 +188,16 @@ def params():
 		"Topic :: Printing",
 		"Topic :: System :: Monitoring"
 	]
-	author = "Gina Häußge"
-	author_email = "gina@octoprint.org"
-	url = "https://octoprint.org"
+	author = "Harsha Alva, based on work by Gina Häußge"
+	author_email = "support@fracktal.in"
+	url = "https://fracktal.in"
 	license = "GNU Affero General Public License v3"
 	keywords = "3dprinting 3dprinter 3d-printing 3d-printer octoprint"
 
 	project_urls={
+		"Bug Reports": "https://github.com/FracktalWorks/fw-OctoPrint/issues",
+		"Source": "https://github.com/FracktalWorks/fw-OctoPrint",
 		"Community Forum": "https://community.octoprint.org",
-		"Bug Reports": "https://github.com/foosel/OctoPrint/issues",
-		"Source": "https://github.com/foosel/OctoPrint",
 		"Funding": "https://donate.octoprint.org"
 	}
 
