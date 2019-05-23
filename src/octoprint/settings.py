@@ -189,13 +189,13 @@ default_settings = {
 			"serverRestartCommand": None
 		},
 		"onlineCheck": {
-			"enabled": None,
+			"enabled": False,
 			"interval": 15 * 60, # 15 min
 			"host": "8.8.8.8",
 			"port": 53
 		},
 		"pluginBlacklist": {
-			"enabled": None,
+			"enabled": True,
 			"url": "https://plugins.octoprint.org/blacklist.json",
 			"ttl": 15 * 60 # 15 min
 		},
@@ -249,7 +249,7 @@ default_settings = {
 	},
 	"feature": {
 		"temperatureGraph": True,
-		"sdSupport": True,
+		"sdSupport": False,
 		"keyboardControl": True,
 		"pollWatched": False,
 		"modelSizeDetection": True,
@@ -282,7 +282,7 @@ default_settings = {
 		"sendAutomaticallyAfter": 1,
 	},
 	"printerProfiles": {
-		"default": None
+		"default": "_default"
 	},
 	"printerParameters": {
 		"pauseTriggers": [],
@@ -328,7 +328,7 @@ default_settings = {
 		"actions": []
 	},
 	"accessControl": {
-		"enabled": True,
+		"enabled": False,
 		"salt": None,
 		"userManager": "octoprint.users.FilebasedUserManager",
 		"userfile": None,
@@ -339,7 +339,7 @@ default_settings = {
 		"checkBasicAuthenticationPassword": True
 	},
 	"slicing": {
-		"enabled": True,
+		"enabled": False,
 		"defaultSlicer": None,
 		"defaultProfiles": None
 	},
