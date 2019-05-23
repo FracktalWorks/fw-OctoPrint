@@ -18,7 +18,7 @@
   
     "python.linting.flake8Enabled": true,
     "python.linting.flake8Args": [
-      "--ignore=E722",
+      "--ignore=E722,E402,E265,F401,E501,E713,E302",
       "--max-line-length=200"
     ],
   
@@ -26,4 +26,5 @@
     "python.formatting.autopep8Args": [
       "--max-line-length=200"
     ],
+    "python.envFile": "${workspaceFolder}/.vscode/.env",
 }

@@ -9,12 +9,13 @@
       "type": "python",
       "request": "launch",
       "pythonPath": "${env:OCTOPRINT_ENV}\\Scripts\\python.exe",
-      "env": {
-        "PYTHONPATH": "${workspaceFolder}\\src;${env:OCTOPRINT_ENV}\\lib\\site-packages"
-      },
+      // "env": {
+      //   "PYTHONPATH": "${workspaceFolder}\\src;${env:OCTOPRINT_ENV}\\lib\\site-packages"
+      // },
       "program": "${workspaceFolder}\\src\\octoprint",
       "args": ["serve", "-b.octoprint"],
-      "console": "integratedTerminal"
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}\\.vscode\\.env"
     },
   ]
 }
