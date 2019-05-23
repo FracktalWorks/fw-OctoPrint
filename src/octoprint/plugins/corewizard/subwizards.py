@@ -17,11 +17,12 @@ class ServerCommandsSubwizard(object):
 		return True
 
 	def _is_servercommands_wizard_required(self):
-		system_shutdown_command = self._settings.global_get(["server", "commands", "systemShutdownCommand"])
-		system_restart_command = self._settings.global_get(["server", "commands", "systemRestartCommand"])
-		server_restart_command = self._settings.global_get(["server", "commands", "serverRestartCommand"])
+		# system_shutdown_command = self._settings.global_get(["server", "commands", "systemShutdownCommand"])
+		# system_restart_command = self._settings.global_get(["server", "commands", "systemRestartCommand"])
+		# server_restart_command = self._settings.global_get(["server", "commands", "serverRestartCommand"])
 
-		return not (system_shutdown_command and system_restart_command and server_restart_command)
+		# return not (system_shutdown_command and system_restart_command and server_restart_command)
+		return False
 
 	def _get_servercommands_wizard_details(self):
 		return dict(required=self._is_servercommands_wizard_required())
@@ -36,11 +37,12 @@ class WebcamSubwizard(object):
 		return True
 
 	def _is_webcam_wizard_required(self):
-		webcam_snapshot_url = self._settings.global_get(["webcam", "snapshot"])
-		webcam_stream_url = self._settings.global_get(["webcam", "stream"])
-		ffmpeg_path = self._settings.global_get(["webcam", "ffmpeg"])
+		# webcam_snapshot_url = self._settings.global_get(["webcam", "snapshot"])
+		# webcam_stream_url = self._settings.global_get(["webcam", "stream"])
+		# ffmpeg_path = self._settings.global_get(["webcam", "ffmpeg"])
 
-		return not (webcam_snapshot_url and webcam_stream_url and ffmpeg_path)
+		# return not (webcam_snapshot_url and webcam_stream_url and ffmpeg_path)
+		return False
 
 	def _get_webcam_wizard_details(self):
 		return dict(required=self._is_webcam_wizard_required())
@@ -139,7 +141,8 @@ class PrinterProfileSubwizard(object):
 		return True
 
 	def _is_printerprofile_wizard_required(self):
-		return self._printer_profile_manager.is_default_unmodified() and self._printer_profile_manager.profile_count == 1
+		# return self._printer_profile_manager.is_default_unmodified() and self._printer_profile_manager.profile_count == 1
+		return self._printer_profile_manager.is_default_unmodified()
 
 	def _get_printerprofile_wizard_details(self):
 		return dict(required=self._is_printerprofile_wizard_required())
