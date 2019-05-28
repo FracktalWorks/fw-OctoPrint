@@ -17,6 +17,7 @@
         <!-- /ko -->
         <tr data-bind="template: { name: 'temprow-template', data: bedTemp }, visible: hasBed"></tr>
         <tr data-bind="template: { name: 'temprow-template', data: chamberTemp }, visible: hasChamber"></tr>
+        <tr data-bind="template: { name: 'temprow-readonly-template', data: filboxTemp }, visible: hasFilbox"></tr>
     </table>
 
     <script type="text/html" id="temprow-template">
@@ -59,6 +60,13 @@
                 </div>
             </form>
         </td>
+    </script>
+
+    <script type="text/html" id="temprow-readonly-template">
+        <th class="temperature_tool" data-bind="text: name, attr: {title: name}"></th>
+        <td class="temperature_actual" data-bind="html: formatTemperature(actual()), attr: {title: formatTemperature(actual())}"></td>
+        <td class="temperature_target"></td>
+        <td class="temperature_offset"></td>
     </script>
 </div>
 
