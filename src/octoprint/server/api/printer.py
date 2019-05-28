@@ -38,12 +38,15 @@ def printerState():
 		processor = lambda x: x
 		heated_bed = printerProfileManager.get_current_or_default()["heatedBed"]
 		heated_chamber = printerProfileManager.get_current_or_default()["heatedChamber"]
-		if not heated_bed and not heated_chamber:
+		filbox = printerProfileManager.get_current_or_default()["filbox"]
+		if not heated_bed and not heated_chamber and not filbox:
 			processor = _keep_tools
 		elif not heated_bed:
 			processor = _delete_bed
 		elif not heated_chamber:
 			processor = _delete_chamber
+		elif not filbox:
+			processor = _delete_filbox
 
 		result.update({"temperature": _get_temperature_data(processor)})
 
@@ -287,6 +290,20 @@ def printerChamberState():
 	else:
 		return jsonify(data)
 
+@api.route("/printer/filbox", methods=["GET"])
+def printerFilboxState():
+	if not printer.is_operational():
+		return make_response("Printer is not operational", 409)
+
+	if not printerProfileManager.get_current_or_default()["filbox"]:
+		return make_response("Printer does not have a filbox", 409)
+
+	data = _get_temperature_data(_keep_filbox)
+	if isinstance(data, Response):
+		return data
+	else:
+		return jsonify(data)
+
 
 ##~~ Print head
 
@@ -497,6 +514,12 @@ def _keep_chamber(x):
 
 def _delete_chamber(x):
 	return _delete_from_data(x, lambda k: k == "chamber")
+
+def _keep_filbox(x):
+	return _delete_from_data(x, lambda k: k != "filbox")
+
+def _delete_filbox(x):
+	return _delete_from_data(x, lambda k: k == "filbox")
 
 
 def _delete_from_data(x, key_matcher):
