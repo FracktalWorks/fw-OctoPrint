@@ -132,7 +132,7 @@ def get_cmdclass():
 	cmdclass = versioneer.get_cmdclass()
 
 	# add clean command
-	cmdclass.update(dict(clean=octoprint_setuptools.CleanCommand.for_options(source_folder="src", eggs=["OctoPrint*.egg-info"])))
+	cmdclass.update(dict(clean=octoprint_setuptools.CleanCommand.for_options(source_folder="src", eggs=["*OctoPrint*.egg-info"])))
 
 	# add translation commands
 	translation_dir = "translations"
