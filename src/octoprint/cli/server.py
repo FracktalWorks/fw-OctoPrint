@@ -23,7 +23,7 @@ def run_server(basedir, configfile, host, port, v6_only, debug, allow_root, logg
 		logger = logging.getLogger("octoprint.startup")
 
 		logger.info(get_divider_line("*"))
-		logger.info("Starting OctoPrint {}".format(__display_version__))
+		logger.info("Starting fw-OctoPrint {}".format(__display_version__))
 		if safe_mode:
 			logger.info("Starting in SAFE MODE. Third party plugins will be disabled!")
 			if safe_mode == "flag":
