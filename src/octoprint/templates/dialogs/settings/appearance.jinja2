@@ -19,13 +19,15 @@
             </label>
         </div>
     </div>
-    {# <div class="control-group" title="{{ _('Also personalize the icon of the browser tab') }}">
+    {# 
+    <div class="control-group" title="{{ _('Also personalize the icon of the browser tab') }}">
         <div class="controls">
             <label class="checkbox">
                 <input type="checkbox" data-bind="checked: appearance_colorIcon"> {{ _('Colorize favicon (in supported browsers)') }}
             </label>
         </div>
     </div>
+    #}
     <div class="control-group" title="">
         <label class="control-label" for="settings-appearanceLanguages">{{ _('Language Packs') }}</label>
         <div class="controls">
@@ -42,11 +44,18 @@
             </select>
             <span class="help-inline">{{ _('Changes to the default interface language will only become active after a reload of the page and only be active if not overridden by the user''s language settings.') }}</span>
         </div>
-    </div> #}
+    </div>
     <div class="control-group">
         <div class="controls">
             <label class="checkbox">
                 <input type="checkbox" data-bind="checked: appearance_showFahrenheitAlso" id="settings-appearanceShowFahrenheitAlso"> {{ _('Show temperatures in Fahrenheit as well as Celsius') }}
+            </label>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <label class="checkbox">
+                <input type="checkbox" data-bind="checked: appearance_fuzzyTimes" id="settings-appearanceFuzzyTimes"> {{ _('Show fuzzy print time estimates') }}
             </label>
         </div>
     </div>

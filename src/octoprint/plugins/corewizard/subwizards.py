@@ -25,8 +25,7 @@ class ServerCommandsSubwizard(object):
 		return False
 
 	def _get_servercommands_wizard_details(self):
-		# return dict(required=self._is_servercommands_wizard_required())
-		return dict(required=False)
+		return dict(required=self._is_servercommands_wizard_required())
 
 	def _get_servercommands_wizard_name(self):
 		return gettext("Server Commands")
@@ -143,7 +142,7 @@ class PrinterProfileSubwizard(object):
 
 	def _is_printerprofile_wizard_required(self):
 		# return self._printer_profile_manager.is_default_unmodified() and self._printer_profile_manager.profile_count == 1
-		return not self._printer_profile_manager.is_default_unmodified()
+		return self._printer_profile_manager.is_default_unmodified()
 
 	def _get_printerprofile_wizard_details(self):
 		return dict(required=self._is_printerprofile_wizard_required())
@@ -153,6 +152,6 @@ class PrinterProfileSubwizard(object):
 
 
 Subwizards = type("Subwizwards",
-				  tuple(cls for clsname, cls in inspect.getmembers(sys.modules[__name__], inspect.isclass)
-						if clsname.endswith("Subwizard")),
-				  dict())
+                  tuple(cls for clsname, cls in inspect.getmembers(sys.modules[__name__], inspect.isclass)
+                        if clsname.endswith("Subwizard")),
+                  dict())

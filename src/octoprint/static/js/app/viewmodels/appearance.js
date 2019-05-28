@@ -79,15 +79,15 @@ $(function() {
         self.name = parameters[0].appearance_name;
         self.color = parameters[0].appearance_color;
         self.colorTransparent = parameters[0].appearance_colorTransparent;
-        // self.colorIcon = parameters[0].appearance_colorIcon;
+        self.colorIcon = parameters[0].appearance_colorIcon;
 
-        function updateIcon() {
-            if (self.colorIcon()) {
-                themeFavicon(self.color());
-            } else {
-                themeFavicon("default");
-            }
-        }
+        // function updateIcon() {
+        //     if (self.colorIcon()) {
+        //         themeFavicon(self.color());
+        //     } else {
+        //         themeFavicon("default");
+        //     }
+        // }
         // self.color.subscribe(updateIcon);
         // self.colorIcon.subscribe(updateIcon);
         // updateIcon();

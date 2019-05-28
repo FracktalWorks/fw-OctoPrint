@@ -14,6 +14,8 @@ $(function() {
                 custom_box: false
             },
             heatedBed: true,
+            heatedChamber: false,
+            filbox: false,
             axes: {
                 x: {speed: 6000, inverted: false},
                 y: {speed: 6000, inverted: false},
@@ -60,6 +62,8 @@ $(function() {
         });
 
         self.heatedBed = ko.observable();
+        self.heatedChamber = ko.observable();
+        self.filbox = ko.observable();
 
         self.nozzleDiameter = ko.observable();
         self.extruders = ko.observable();
@@ -209,6 +213,8 @@ $(function() {
             }
 
             self.heatedBed(data.heatedBed);
+            self.heatedChamber(data.heatedChamber);
+            self.filbox(data.filbox);
 
             self.nozzleDiameter(data.extruder.nozzleDiameter);
             self.sharedNozzle(data.extruder.sharedNozzle);
@@ -269,6 +275,8 @@ $(function() {
                     origin: self.volumeOrigin()
                 },
                 heatedBed: self.heatedBed(),
+                heatedChamber: self.heatedChamber(),
+                filbox: self.filbox(),
                 extruder: {
                     count: parseInt(self.extruders()),
                     offsets: [
