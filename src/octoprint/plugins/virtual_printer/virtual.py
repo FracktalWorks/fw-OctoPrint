@@ -86,6 +86,8 @@ class VirtualPrinter(object):
 		self.bedTargetTemp = 0.0
 		self.chamberTemp = self._ambient_temperature
 		self.chamberTargetTemp = 0.0
+		self.filboxTemp = self._ambient_temperature
+		self.filboxTargetTemp = 0.0
 		self.lastTempAt = monotonic_time()
 
 		self._relative = True
@@ -944,6 +946,12 @@ class VirtualPrinter(object):
 				else:
 					allTempsString = "C:%.2f %s" % (self.chamberTemp, allTempsString)
 
+			if settings().getBoolean(["devel", "virtualPrinter", "hasFilbox"]):
+				if includeTarget:
+					allTempsString = "F:%.2f /%.2f %s" % (self.filboxTemp, self.filboxTargetTemp, allTempsString)
+				else:
+					allTempsString = "F:%.2f %s" % (self.filboxTemp, filboxTargetTemp)
+
 			if settings().getBoolean(["devel", "virtualPrinter", "includeCurrentToolInTemps"]):
 				if includeTarget:
 					output = "T:%.2f /%.2f %s" % (self.temp[self.currentExtruder], self.targetTemp[self.currentExtruder], allTempsString)
@@ -973,7 +981,15 @@ class VirtualPrinter(object):
 			else:
 				c = ""
 
-			output = t + " " + b + " " + c
+			if settings().getBoolean(["devel", "virtualPrinter", "hasFilbox"]):
+				if includeTarget:
+					f = "F:%.2f /%.2f" % (self.filboxTemp, self.filboxTargetTemp)
+				else:
+					f = "F:%.2f" % self.filboxTemp
+			else:
+				f = ""
+
+			output = t + " " + b + " " + c + " " + f
 			output = output.strip()
 
 		output += " @:64\n"
@@ -1291,6 +1307,9 @@ class VirtualPrinter(object):
 			elif heater == "chamber":
 				test = lambda: self.chamberTemp < self.chamberTargetTemp - delta or (not only_wait_if_higher and self.chamberTemp > self.chamberTargetTemp + delta)
 				output = lambda: "C:%0.2f" % self.chamberTemp
+			elif heater == "filbox":
+				test = lambda: self.filboxTemp < self.filboxTargetTemp - delta or (not only_wait_if_higher and self.filboxTemp > self.filboxTargetTemp + delta)
+				output = lambda: "F:%0.2f" % self.filboxTemp
 			else:
 				return
 
@@ -1343,6 +1362,7 @@ class VirtualPrinter(object):
 			self.temp[i] = simulate(self.temp[i], self.targetTemp[i], self._ambient_temperature)
 		self.bedTemp = simulate(self.bedTemp, self.bedTargetTemp, self._ambient_temperature)
 		self.chamberTemp = simulate(self.chamberTemp, self.chamberTargetTemp, self._ambient_temperature)
+		self.filboxTemp = simulate(self.filboxTemp, self.filboxTargetTemp, self._ambient_temperature)
 
 	def _processBuffer(self):
 		while self.buffered is not None:
