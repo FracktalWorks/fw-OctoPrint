@@ -73,6 +73,7 @@ $(function() {
         });
         self.hasBed = ko.observable(true);
         self.hasChamber = ko.observable(false);
+        self.hasFilbox = ko.observable(false);
 
         self.visible = ko.pureComputed(function() {
             return self.hasTools() || self.hasBed();
@@ -83,8 +84,12 @@ $(function() {
         self.bedTemp["key"]("bed");
 
         self.chamberTemp = self._createToolEntry();
-        self.chamberTemp["name"](gettext("Chamber"));
+        self.chamberTemp["name"](gettext("Print Chamber"));
         self.chamberTemp["key"]("chamber");
+
+        self.filboxTemp = self._createToolEntry();
+        self.filboxTemp["name"](gettext("Filament Chamber"));
+        self.filboxTemp["key"]("filbox");
 
         self.isErrorOrClosed = ko.observable(undefined);
         self.isOperational = ko.observable(undefined);
@@ -118,23 +123,23 @@ $(function() {
                 for (var extruder = 0; extruder < numExtruders; extruder++) {
                     color = graphColors.shift();
                     if (!color) color = "black";
-                    heaterOptions["tool" + extruder] = {name: "T" + extruder, color: color};
+                    heaterOptions["tool" + extruder] = {name: "Extruder " + extruder, color: color};
 
                     if (tools.length <= extruder || !tools[extruder]) {
                         tools[extruder] = self._createToolEntry();
                     }
-                    tools[extruder]["name"](gettext("Tool") + " " + extruder);
+                    tools[extruder]["name"](gettext("Extruder") + " " + extruder);
                     tools[extruder]["key"]("tool" + extruder);
                 }
             } else if (numExtruders === 1 || sharedNozzle) {
                 // only one extruder, no need to add numbers
                 color = graphColors[0];
-                heaterOptions["tool0"] = {name: "T", color: color};
+                heaterOptions["tool0"] = {name: "Extruder", color: color};
 
                 if (tools.length < 1 || !tools[0]) {
                     tools[0] = self._createToolEntry();
                 }
-                tools[0]["name"](gettext("Tool"));
+                tools[0]["name"](gettext("Extruder"));
                 tools[0]["key"]("tool0");
             }
 
@@ -149,9 +154,17 @@ $(function() {
             // heated chamber
             if (currentProfileData && currentProfileData.heatedChamber()) {
                 self.hasChamber(true);
-                heaterOptions["chamber"] = {name: gettext("Chamber"), color: "black"};
+                heaterOptions["chamber"] = {name: gettext("Print Chamber"), color: "black"};
             } else {
                 self.hasChamber(false);
+            }
+
+            // filbox
+            if (currentProfileData && currentProfileData.filbox()) {
+                self.hasFilbox(true);
+                heaterOptions["filbox"] = {name: gettext("Filament Chamber"), color: "yellow"};
+            } else {
+                self.hasFilbox(false);
             }
 
             // write back
@@ -170,6 +183,7 @@ $(function() {
             self.settingsViewModel.printerProfiles.currentProfileData().extruder.sharedNozzle.subscribe(self._printerProfileUpdated);
             self.settingsViewModel.printerProfiles.currentProfileData().heatedBed.subscribe(self._printerProfileUpdated);
             self.settingsViewModel.printerProfiles.currentProfileData().heatedChamber.subscribe(self._printerProfileUpdated);
+            self.settingsViewModel.printerProfiles.currentProfileData().filbox.subscribe(self._printerProfileUpdated);
         });
 
         self.temperatures = [];
@@ -253,6 +267,14 @@ $(function() {
                 self.chamberTemp["target"](0);
             }
 
+            if (lastData.hasOwnProperty("filbox")) {
+                self.filboxTemp["actual"](lastData.filbox.actual);
+                self.filboxTemp["target"](lastData.filbox.target);
+            } else {
+                self.filboxTemp["actual"](0);
+                self.filboxTemp["target"](0);
+            }
+
             if (!CONFIG_TEMPERATURE_GRAPH) return;
 
             self.temperatures = self._processTemperatureData(serverTime, data, self.temperatures);
@@ -284,6 +306,12 @@ $(function() {
                 self.chamberTemp["offset"](data["chamber"]);
             } else {
                 self.chamberTemp["offset"](0);
+            }
+
+            if (data.hasOwnProperty("filbox")) {
+                self.filboxTemp["offset"](data["filbox"]);
+            } else {
+                self.filboxTemp["offset"](0);
             }
         };
 
@@ -338,6 +366,8 @@ $(function() {
                 value = profile.bed;
             } else if (heater.key() === "chamber") {
                 value = profile.chamber;
+            } else if (heater.key() === "filbox") {
+                value = profile.filbox;
             } else {
                 value = profile.extruder;
             }
@@ -622,6 +652,8 @@ $(function() {
                 target = profile.bed;
             } else if (item.key() === "chamber") {
                 target = profile.chamber;
+            } else if (item.key() === "filbox") {
+                target = profile.filbox;
             } else {
                 target = profile.extruder;
             }
@@ -656,6 +688,9 @@ $(function() {
                     .done(onSuccess);
             } else if (item.key() === "chamber") {
                 return self._setChamberTemperature(value)
+                    .done(onSuccess);
+            } else if (item.key() === "filbox") {
+                return self._setFilboxTemperature(value)
                     .done(onSuccess);
             } else {
                 return self._setToolTemperature(item.key(), value)
@@ -747,6 +782,9 @@ $(function() {
             } else if (item.key() === "chamber") {
                 return self._setChamberOffset(value)
                     .done(onSuccess);
+            } else if (item.key() === "filbox") {
+                return self._setFilboxOffset(value)
+                    .done(onSuccess);
             } else {
                 return self._setToolOffset(item.key(), value)
                     .done(onSuccess);
@@ -779,6 +817,14 @@ $(function() {
 
         self._setChamberOffset = function(offset) {
             return OctoPrint.printer.setChamberTemperatureOffset(parseInt(offset));
+        };
+
+        self._setFilboxTemperature = function(temperature) {
+            return OctoPrint.printer.setFilboxTargetTemperature(parseInt(temperature));
+        };
+
+        self._setFilboxOffset = function(offset) {
+            return OctoPrint.printer.setFilboxTemperatureOffset(parseInt(offset));
         };
 
         self._replaceLegendLabel = function(index, series, value, emph) {

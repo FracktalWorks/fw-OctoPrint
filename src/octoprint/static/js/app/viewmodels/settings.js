@@ -819,7 +819,8 @@ $(function() {
                                     name: profile.name,
                                     extruder: Math.floor(_.isNumber(profile.extruder) ? profile.extruder : parseInt(profile.extruder)),
                                     bed: Math.floor(_.isNumber(profile.bed) ? profile.bed : parseInt(profile.bed)),
-                                    chamber: Math.floor(_.isNumber(profile.chamber) ? profile.chamber : (_.isNumber(parseInt(profile.chamber)) ? parseInt(profile.chamber) : 0))
+                                    chamber: Math.floor(_.isNumber(profile.chamber) ? profile.chamber : (_.isNumber(parseInt(profile.chamber)) ? parseInt(profile.chamber) : 0)),
+                                    filbox: Math.floor(_.isNumber(profile.filbox) ? profile.filbox : (_.isNumber(parseInt(profile.filbox)) ? parseInt(profile.filbox) : 0))
                                 });
                             } catch (ex) {
                                 // ignore

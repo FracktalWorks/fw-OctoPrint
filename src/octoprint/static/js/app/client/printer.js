@@ -10,6 +10,7 @@
     var toolUrl = url + "/tool";
     var bedUrl = url + "/bed";
     var chamberUrl = url + "/chamber";
+    var filboxUrl = url + "/filbox";
     var sdUrl = url + "/sd";
 
     var OctoPrintPrinterClient = function(base) {
@@ -30,6 +31,10 @@
 
     OctoPrintPrinterClient.prototype.issueChamberCommand = function (command, payload, opts) {
         return this.base.issueCommand(chamberUrl, command, payload, opts);
+    };
+
+    OctoPrintPrinterClient.prototype.issueFilboxCommand = function (command, payload, opts) {
+        return this.base.issueCommand(filboxUrl, command, payload, opts);
     };
 
     OctoPrintPrinterClient.prototype.issueSdCommand = function (command, payload, opts) {
@@ -102,6 +107,23 @@
         var limit = flags.limit || undefined;
 
         var getUrl = chamberUrl;
+        if (history) {
+            getUrl += "?history=true";
+            if (limit) {
+                getUrl += "&limit=" + limit;
+            }
+        }
+
+        return this.base.get(getUrl, opts);
+    };
+
+    OctoPrintPrinterClient.prototype.getFilboxState = function (flags, opts) {
+        flags = flags || {};
+
+        var history = flags.history || undefined;
+        var limit = flags.limit || undefined;
+
+        var getUrl = filboxUrl;
         if (history) {
             getUrl += "?history=true";
             if (limit) {
@@ -238,6 +260,26 @@
         };
 
         return this.issueChamberCommand("offset", payload, opts);
+    };
+
+    OctoPrintPrinterClient.prototype.setFilboxTargetTemperature = function (target, opts) {
+        target = target || 0;
+
+        var payload = {
+            target: target
+        };
+
+        return this.issueFilboxCommand("target", payload, opts);
+    };
+
+    OctoPrintPrinterClient.prototype.setFilboxTemperatureOffset = function (offset, opts) {
+        offset = offset || 0;
+
+        var payload = {
+            offset: offset
+        };
+
+        return this.issueFilboxCommand("offset", payload, opts);
     };
 
     OctoPrintPrinterClient.prototype.initSd = function (opts) {
