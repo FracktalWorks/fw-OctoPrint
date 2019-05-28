@@ -98,7 +98,7 @@ Groups will be as follows:
   * ``size``: size of the file in bytes (int)
 """
 
-regex_temp = re.compile("(?P<tool>B|C|T(?P<toolnum>\d*)):\s*(?P<actual>%s)(\s*\/?\s*(?P<target>%s))?" % (regex_float_pattern, regex_float_pattern))
+regex_temp = re.compile("(?P<tool>B|C|T|F(?P<toolnum>\d*)):\s*(?P<actual>%s)(\s*\/?\s*(?P<target>%s))?" % (regex_float_pattern, regex_float_pattern))
 """Regex matching temperature entries in line.
 
 Groups will be as follows:
@@ -277,6 +277,7 @@ class TemperatureRecord(object):
 		self._tools = dict()
 		self._bed = (None, None)
 		self._chamber = (None, None)
+		self._filbox = (None, None)
 
 	def copy_from(self, other):
 		self._tools = other.tools
@@ -294,6 +295,10 @@ class TemperatureRecord(object):
 		current = self._chamber
 		self._chamber = self._to_new_tuple(current, actual, target)
 
+	def set_filbox(self, actual=None, target=None):
+		current = self._filbox
+		self._filbox = self._to_new_tuple(current, actual, target)
+
 	@property
 	def tools(self):
 		return dict(self._tools)
@@ -305,6 +310,10 @@ class TemperatureRecord(object):
 	@property
 	def chamber(self):
 		return self._chamber
+
+	@property
+	def filbox(self):
+		return self._filbox
 
 	def as_script_dict(self):
 		result = dict()
@@ -321,6 +330,10 @@ class TemperatureRecord(object):
 		chamber = self.chamber
 		result["c"] = dict(actual=chamber[0],
 		                   target=chamber[1])
+
+		filbox = self.filbox
+		result["f"] = dict(actual=filbox[0],
+		                   target=filbox[1])
 
 		return result
 
@@ -1547,6 +1560,11 @@ class MachineCom(object):
 			actual, target = parsedTemps["C"]
 			self.last_temperature.set_chamber(actual=actual, target=target)
 
+		# filbox temperature
+		if "F" in parsedTemps and (self._printerProfileManager.get_current_or_default()["filbox"]):
+			actual, target = parsedTemps["F"]
+			self.last_temperature.set_filbox(actual=actual, target=target)
+
 	##~~ Serial monitor processing received messages
 
 	def _monitor(self):
@@ -1803,7 +1821,8 @@ class MachineCom(object):
 
 				##~~ temperature processing
 				elif ' T:' in line or line.startswith('T:') or ' T0:' in line or line.startswith('T0:') \
-						or ((' B:' in line or line.startswith('B:')) and not 'A:' in line):
+						or ((' B:' in line or line.startswith('B:')) and not 'A:' in line) \
+						or ((' F:' in line or line.startswith('F:')) and not 'A:' in line):
 
 					if not disable_external_heatup_detection and not self._temperature_autoreporting \
 							and not line.strip().startswith("ok") and not self._heating \
@@ -1813,7 +1832,7 @@ class MachineCom(object):
 						self._heatupWaitStartTime = monotonic_time()
 
 					self._processTemperatures(line)
-					self._callback.on_comm_temperature_update(self.last_temperature.tools, self.last_temperature.bed, self.last_temperature.chamber)
+					self._callback.on_comm_temperature_update(self.last_temperature.tools, self.last_temperature.bed, self.last_temperature.chamber, self.last_temperature.filbox)
 
 				elif supportRepetierTargetTemp and ('TargetExtr' in line or 'TargetBed' in line):
 					matchExtr = regex_repetierTempExtr.match(line)
@@ -1824,14 +1843,14 @@ class MachineCom(object):
 						try:
 							target = float(matchExtr.group(2))
 							self.last_temperature.set_tool(toolNum, target=target)
-							self._callback.on_comm_temperature_update(self.last_temperature.tools, self.last_temperature.bed, self.last_temperature.chamber)
+							self._callback.on_comm_temperature_update(self.last_temperature.tools, self.last_temperature.bed, self.last_temperature.chamber, self.last_temperature.filbox)
 						except ValueError:
 							pass
 					elif matchBed is not None:
 						try:
 							target = float(matchBed.group(1))
 							self.last_temperature.set_bed(target=target)
-							self._callback.on_comm_temperature_update(self.last_temperature.tools, self.last_temperature.bed, self.last_temperature.chamber)
+							self._callback.on_comm_temperature_update(self.last_temperature.tools, self.last_temperature.bed, self.last_temperature.chamber, self.last_temperature.filbox)
 						except ValueError:
 							pass
 
@@ -3534,7 +3553,7 @@ class MachineCom(object):
 			try:
 				target = float(match.group("value"))
 				self.last_temperature.set_tool(toolNum, target=target)
-				self._callback.on_comm_temperature_update(self.last_temperature.tools, self.last_temperature.bed, self.last_temperature.chamber)
+				self._callback.on_comm_temperature_update(self.last_temperature.tools, self.last_temperature.bed, self.last_temperature.chamber, self.last_temperature.filbox)
 			except ValueError:
 				pass
 
@@ -3547,7 +3566,7 @@ class MachineCom(object):
 			try:
 				target = float(match.group("value"))
 				self.last_temperature.set_bed(target=target)
-				self._callback.on_comm_temperature_update(self.last_temperature.tools, self.last_temperature.bed, self.last_temperature.chamber)
+				self._callback.on_comm_temperature_update(self.last_temperature.tools, self.last_temperature.bed, self.last_temperature.chamber, self.last_temperature.filbox)
 			except ValueError:
 				pass
 
@@ -3560,7 +3579,7 @@ class MachineCom(object):
 			try:
 				target = float(match.group("value"))
 				self.last_temperature.set_chamber(target=target)
-				self._callback.on_comm_temperature_update(self.last_temperature.tools, self.last_temperature.bed, self.last_temperature.chamber)
+				self._callback.on_comm_temperature_update(self.last_temperature.tools, self.last_temperature.bed, self.last_temperature.chamber, self.last_temperature.filbox)
 			except ValueError:
 				pass
 
@@ -3750,7 +3769,7 @@ class MachineComPrintCallback(object):
 	def on_comm_log(self, message):
 		pass
 
-	def on_comm_temperature_update(self, temp, bedTemp, chamberTemp):
+	def on_comm_temperature_update(self, temp, bedTemp, chamberTemp, filboxTemp):
 		pass
 
 	def on_comm_position_update(self, position, reason=None):

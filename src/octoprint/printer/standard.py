@@ -55,9 +55,11 @@ class Printer(PrinterInterface, comm.MachineComPrintCallback):
 		self._temp = None
 		self._bedTemp = None
 		self._chamberTemp = None
+		self._filboxTemp = None
 		self._targetTemp = None
 		self._targetBedTemp = None
 		self._targetChamberTemp = None
+		self._targetFilboxTemp = None
 		self._temps = TemperatureHistory(cutoff=settings().getInt(["temperature", "cutoff"])*60)
 		self._tempBacklog = []
 
@@ -630,6 +632,12 @@ class Printer(PrinterInterface, comm.MachineComPrintCallback):
 				"target": self._chamberTemp[1],
 				"offset": offsets["chamber"] if "chamber" in offsets and offsets["chamber"] is not None else 0
 			}
+		if self._filboxTemp is not None:
+			result["filbox"] = {
+				"actual": self._filboxTemp[0],
+				"target": self._filboxTemp[1],
+				"offset": 0
+			}
 
 		return result
 
@@ -874,7 +882,7 @@ class Printer(PrinterInterface, comm.MachineComPrintCallback):
 		                  printTimeLeft=int(printTimeLeft) if printTimeLeft is not None else None,
 		                  printTimeLeftOrigin=printTimeLeftOrigin)
 
-	def _addTemperatureData(self, tools=None, bed=None, chamber=None):
+	def _addTemperatureData(self, tools=None, bed=None, chamber=None, filbox=None):
 		if tools is None:
 			tools = dict()
 
@@ -885,12 +893,15 @@ class Printer(PrinterInterface, comm.MachineComPrintCallback):
 			data["bed"] = self._dict(actual=bed[0], target=bed[1])
 		if chamber is not None and isinstance(chamber, tuple):
 			data["chamber"] = self._dict(actual=chamber[0], target=chamber[1])
+		if filbox is not None and isinstance(filbox, tuple):
+			data["filbox"] = self._dict(actual=filbox[0], target=filbox[1])
 
 		self._temps.append(data)
 
 		self._temp = tools
 		self._bedTemp = bed
 		self._chamberTemp = chamber
+		self._filboxTemp = filbox
 
 		self._stateMonitor.add_temperature(self._dict(**data))
 
@@ -1039,8 +1050,8 @@ class Printer(PrinterInterface, comm.MachineComPrintCallback):
 		"""
 		self._addLog(to_unicode(message, "utf-8", errors="replace"))
 
-	def on_comm_temperature_update(self, temp, bedTemp, chamberTemp):
-		self._addTemperatureData(tools=copy.deepcopy(temp), bed=copy.deepcopy(bedTemp), chamber=copy.deepcopy(chamberTemp))
+	def on_comm_temperature_update(self, temp, bedTemp, chamberTemp, filboxTemp):
+		self._addTemperatureData(tools=copy.deepcopy(temp), bed=copy.deepcopy(bedTemp), chamber=copy.deepcopy(chamberTemp), filbox=copy.deepcopy(filboxTemp))
 
 	def on_comm_position_update(self, position, reason=None):
 		payload = dict(reason=reason)
