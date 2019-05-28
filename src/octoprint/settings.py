@@ -399,6 +399,7 @@ default_settings = {
 			"includeFilenameInOpened": True,
 			"hasBed": True,
 			"hasChamber": False,
+			"hasFilbox": False,
 			"repetierStyleTargetTemperature": False,
 			"okBeforeCommandOutput": False,
 			"smoothieTemperatureReporting": False,
