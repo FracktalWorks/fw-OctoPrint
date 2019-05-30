@@ -368,6 +368,9 @@ def uploadGcodeFile(target):
 		if octoprint.filemanager.valid_file_type(added_file, "stl"):
 			filename = added_file
 			done = True
+		elif octoprint.filemanager.valid_file_type(added_file, "png"):
+			filename = added_file
+			done = True
 		else:
 			filename = fileProcessingFinished(added_file, fileManager.path_on_disk(FileDestinations.LOCAL, added_file), target)
 			done = not sd
