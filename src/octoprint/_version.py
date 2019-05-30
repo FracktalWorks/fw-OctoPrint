@@ -45,7 +45,7 @@ def get_config():
     cfg = VersioneerConfig()
     cfg.VCS = "git"
     cfg.style = "pep440-tag"
-    cfg.tag_prefix = "fracktal"
+    cfg.tag_prefix = ""
     cfg.parentdir_prefix = ""
     cfg.versionfile_source = "src/octoprint/_version.py"
     cfg.lookupfile = ".versioneer-lookup"
