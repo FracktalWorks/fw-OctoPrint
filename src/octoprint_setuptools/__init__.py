@@ -492,13 +492,11 @@ def create_plugin_setup_parameters(identifier="todo", name="TODO", version="0.1"
 		dependency_links = list()
 
 	if requires is None:
-		requires = ["fw-OctoPrint"]
+		requires = ["OctoPrint"]
 	if not isinstance(requires, list):
 		raise ValueError("requires must be a list")
-	if has_requirement("OctoPrint", requires):
-		requires[:] = ["fw-OctoPrint" if x=="OctoPrint" else x for x in requires]
-	if not has_requirement("fw-OctoPrint", requires):
-		requires = ["fw-OctoPrint"] + list(requires)
+	if not has_requirement("OctoPrint", requires):
+		requires = ["OctoPrint"] + list(requires)
 
 	if extra_requires is None:
 		extra_requires = dict()
