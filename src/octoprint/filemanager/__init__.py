@@ -33,6 +33,9 @@ def full_extension_tree():
 		# extensions for printable machine code
 		machinecode=dict(
 			gcode=ContentTypeMapping(["gcode", "gco", "g"], "text/plain")
+		),
+		preview=dict(
+			gcode=ContentTypeMapping(["png"], "image/png")
 		)
 	)
 
