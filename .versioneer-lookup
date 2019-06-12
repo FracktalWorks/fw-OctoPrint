@@ -30,4 +30,4 @@ HEAD
 # regressionfix/.* 1.3.11rc3 18e7d2b72ad73c5d8e522cebbc001d0e8a3dff14 pep440-dev
 
 # every other branch is a development branch and thus gets resolved to 1.4.0-dev for now
-.* 1.3.11-fw-0 1b20ccbd25bff1ce2642ff05eb67f4fa652e7218 pep440-dev
+.* 1!1.3.1101 1b20ccbd25bff1ce2642ff05eb67f4fa652e7218 pep440-dev
