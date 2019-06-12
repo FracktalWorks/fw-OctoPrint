@@ -495,8 +495,15 @@ def create_plugin_setup_parameters(identifier="todo", name="TODO", version="0.1"
 		requires = ["OctoPrint"]
 	if not isinstance(requires, list):
 		raise ValueError("requires must be a list")
-	if not has_requirement("OctoPrint", requires):
-		requires = ["OctoPrint"] + list(requires)
+	if has_requirement("OctoPrint", requires):
+		import re
+		regex = re.compile("(OctoPrint)[ ]*[<!=>~]*")
+		for i, req in enumerate(requires):
+			match = regex.match(req)
+			if match and len(match.groups()) == 1:
+				requires.pop(i)
+	if not has_requirement("fw-OctoPrint", requires):
+		requires = ["fw-OctoPrint"] + list(requires)
 
 	if extra_requires is None:
 		extra_requires = dict()
