@@ -153,7 +153,7 @@ def get_cmdclass():
 
 
 def params():
-	name = "OctoPrint"
+	name = "fw-OctoPrint"
 	version = versioneer.get_version()
 	cmdclass = get_cmdclass()
 
